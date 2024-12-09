@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Labb2_EntityFramework"
         xmlns:view="clr-namespace:Labb2_EntityFramework.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1100">
+        Title="Bookstore" Height="500" Width="800">
     <Grid>
         <view:ConfigurationView/>
     </Grid>
