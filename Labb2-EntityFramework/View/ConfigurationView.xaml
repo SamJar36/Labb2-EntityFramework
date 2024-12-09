@@ -16,7 +16,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly ="True" Header="Bookstore" Width="*"/>
                 <DataGridTextColumn IsReadOnly ="True" Header="Booktitle" Width="*"/>
-                <DataGridTextColumn IsReadOnly ="True" Header="Amount" Width="*"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Amount" Width="0.2*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
