@@ -16,3 +16,4 @@ internal class MainWindowViewModel
         configurationViewModel = new ConfigurationViewModel(this);
     }
 }
+
