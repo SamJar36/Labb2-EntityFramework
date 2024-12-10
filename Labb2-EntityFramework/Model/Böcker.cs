@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Labb2_EntityFramework;
+namespace Labb2_EntityFramework.Model;
 
 public partial class Böcker
 {

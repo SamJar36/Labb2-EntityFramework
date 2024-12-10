@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace Labb2_EntityFramework;
+namespace Labb2_EntityFramework.Model;
 
 public partial class BokhandelContext : DbContext
 {
