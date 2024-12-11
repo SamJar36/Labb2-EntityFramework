@@ -12,14 +12,13 @@ namespace Labb2_EntityFramework.ViewModel;
 
 internal class MainWindowViewModel : ViewModelBase
 {
-    private Butiker activeStore;
-    public ConfigurationViewModel configurationViewModel { get; }
-    public Butiker ActiveStore
+    private Butiker _selectedStore;
+    public Butiker SelectedStore
     {
-        get => activeStore;
+        get => _selectedStore;
         set
         {
-            activeStore = value;
+            _selectedStore = value;
             RaisePropertyChanged();
         }
     }
@@ -31,8 +30,6 @@ internal class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        configurationViewModel = new ConfigurationViewModel(this);
-
         using (var context = new BokhandelContext())
         {
             this.Books = new ObservableCollection<Böcker>(context.Böckers.ToList());
@@ -41,8 +38,16 @@ internal class MainWindowViewModel : ViewModelBase
             this.Inventories = new ObservableCollection<Lagersaldo>(context.Lagersaldos.ToList());
             this.BonusPointAccounts = new ObservableCollection<BonuspoängKonto>(context.BonuspoängKontos.ToList());
 
-            this.ActiveStore = Stores.FirstOrDefault();
+            this.SelectedStore = Stores.FirstOrDefault();
         }
+    }
+    public void AddBooks()
+    {
+
+    }
+    public void RemoveBooks()
+    {
+
     }
 }
 
