@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Labb2_EntityFramework.Model;
+using Labb2_EntityFramework.ViewModel;
 
 namespace Labb2_EntityFramework
 {
@@ -19,6 +21,8 @@ namespace Labb2_EntityFramework
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new MainWindowViewModel();
         }
     }
 }

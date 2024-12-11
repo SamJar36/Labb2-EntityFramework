@@ -25,11 +25,33 @@
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top"
                       Width="150"
-                      Height="20"/>
+                      Height="20"
+                      ItemsSource="{Binding Stores}"
+                      SelectedItem="{Binding ActiveStore}"
+                      DisplayMemberPath="Butiksnamn"/>
+        </StackPanel>
+        <StackPanel x:Name="bookStackPanel"
+                    Grid.Row="1"
+                    Grid.Column="1">
+            <Label x:Name="bookLabel"
+                   Margin="10, 0, 0, 0"
+                   Content="Book"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   Width="100"
+                   Height="50"/>
+            <ComboBox x:Name="bookComboBox"
+                      Margin="10, -20, 0, 0"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Top"
+                      Width="150"
+                      Height="20"
+                      ItemsSource="{Binding Books}"
+                      DisplayMemberPath="Titel"/>
         </StackPanel>
         <StackPanel x:Name="editAmountStackPanel"
                     Grid.Row="1"
-                    Grid.Column="1">
+                    Grid.Column="2">
             <Label x:Name="editAmountLabel1"
                    Margin="0, 0, 10, 0"
                    Content="Amount"
@@ -38,41 +60,42 @@
             <TextBox x:Name="editAmountTextBox"
                      Margin="0, 0, 10, 0"
                      HorizontalAlignment="Right"
-                     VerticalAlignment="Top"
-                     Width="100"
-                     Height="20"/>
+                     Width="52"
+                     Height="20" RenderTransformOrigin="0.509,0.823"/>
         </StackPanel>
         <WrapPanel x:Name="editAmountButtonsWrapPanel"
                    Grid.Row="1"
-                   Grid.Column="2">
+                   Grid.Column="3">
             <Button x:Name="addAmountButton"
                     Margin="10, 10, 0, 0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Width="50"
                     Height="50"
-                    Content="Add"/>
+                    Content="Add"
+                    Command="{Binding ConfigurationViewModel.AddBooks}"/>
             <Button x:Name="removeAmountButton"
                     Margin="10, 10, 0, 0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Width="50"
                     Height="50"
-                    Content="Remove"/>
+                    Content="Remove"
+                    Command="{Binding ConfigurationViewModel.RemoveBooks}"/>
         </WrapPanel>
         <DataGrid x:Name="myDataGrid"
                   Margin="10, 10, 10, 0"
                   Grid.ColumnSpan="4">
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly ="True" Header="Bookstore" Width="*"/>
-                <DataGridTextColumn IsReadOnly ="True" Header="Booktitle" Width="*"/>
-                <DataGridTextColumn IsReadOnly ="True" Header="Amount" Width="0.2*"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Bookstore" Width="*" Binding="{Binding Stores}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Booktitle" Width="*" Binding="{Binding Books}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Amount" Width="0.2*" Binding="{Binding Inventories}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
     </Grid>

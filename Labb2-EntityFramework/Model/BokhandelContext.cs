@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Labb2_EntityFramework.Model;
 
@@ -27,12 +29,19 @@ public partial class BokhandelContext : DbContext
 
     public virtual DbSet<Lagersaldo> Lagersaldos { get; set; }
 
-    public virtual DbSet<TitlarPerFörfattare> TitlarPerFörfattares { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Initial Catalog=bokhandel;Integrated Security=True;Trust Server Certificate=True;Server SPN=localhost");
+    {
+        var config = new ConfigurationBuilder().AddUserSecrets<BokhandelContext>().Build();
 
+        var connectionString = new SqlConnectionStringBuilder()
+        {
+            ServerSPN = config["ServerName"],
+            InitialCatalog = config["DatabaseName"],
+            TrustServerCertificate = true,
+            IntegratedSecurity = true
+        }.ToString();
+        optionsBuilder.UseSqlServer(connectionString);
+    } 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BonuspoängKonto>(entity =>
@@ -162,18 +171,6 @@ public partial class BokhandelContext : DbContext
                 .HasForeignKey(d => d.Isbn)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__lagersaldo__ISBN__3493CFA7");
-        });
-
-        modelBuilder.Entity<TitlarPerFörfattare>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("TitlarPerFörfattare");
-
-            entity.Property(e => e.Lagervärde).HasMaxLength(33);
-            entity.Property(e => e.Namn).HasMaxLength(201);
-            entity.Property(e => e.Titlar).HasMaxLength(33);
-            entity.Property(e => e.Ålder).HasMaxLength(33);
         });
 
         OnModelCreatingPartial(modelBuilder);
