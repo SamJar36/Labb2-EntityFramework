@@ -27,11 +27,23 @@ internal class MainWindowViewModel : ViewModelBase
             RaisePropertyChanged(nameof(Inventories));
         }
     }
+    public ObservableCollection<Böcker> Books { get; private set; }
+    private Böcker _selectedBook;
+    public Böcker SelectedBook
+    {
+        get => _selectedBook;
+        set
+        {
+            _selectedBook = value;
+            RaisePropertyChanged(nameof(SelectedBook));
+        }
+    }
     public ObservableCollection<inventorySummary> Inventories { get; private set; }
 
     public MainWindowViewModel()
     {
         LoadStores();
+        LoadBooks();
     }
     public void AddBooks()
     {
@@ -40,6 +52,16 @@ internal class MainWindowViewModel : ViewModelBase
     public void RemoveBooks()
     {
 
+    }
+    private void LoadBooks()
+    {
+        using var db = new BokhandelContext();
+
+        Books = new ObservableCollection<Böcker>(
+            db.Böckers
+            .Distinct()
+            .ToList());
+        SelectedBook = Books.FirstOrDefault();
     }
     private void LoadStores()
     {

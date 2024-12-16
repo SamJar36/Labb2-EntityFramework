@@ -49,6 +49,7 @@
                       Width="150"
                       Height="20"
                       ItemsSource="{Binding Books}"
+                      SelectedItem="{Binding SelectedBook}"
                       DisplayMemberPath="Titel"/>
         </StackPanel>
         <StackPanel x:Name="editAmountStackPanel"
@@ -89,6 +90,7 @@
                   Margin="10, 10, 10, 0"
                   Grid.ColumnSpan="4"
                   AutoGenerateColumns="False"
+                  CanUserAddRows="False"
                   ItemsSource="{Binding Inventories}">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly ="True" Header="Bookstore" Width="*" Binding="{Binding Book}"/>
