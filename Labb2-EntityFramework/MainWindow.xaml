@@ -29,7 +29,7 @@
                       Width="150"
                       Height="20"
                       ItemsSource="{Binding Stores}"
-                      SelectedItem="{Binding ActiveStore}"
+                      SelectedItem="{Binding SelectedStore}"
                       DisplayMemberPath="Butiksnamn"/>
         </StackPanel>
         <StackPanel x:Name="bookStackPanel"
@@ -91,9 +91,9 @@
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding Inventories}">
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly ="True" Header="Bookstore" Width="*" Binding="{Binding Butik.Butiksnamn}"/>
-                <DataGridTextColumn IsReadOnly ="True" Header="Booktitle" Width="*" Binding="{Binding IsbnNavigation.Titel}"/>
-                <DataGridTextColumn IsReadOnly ="True" Header="Amount" Width="0.2*" Binding="{Binding Antal}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Bookstore" Width="*" Binding="{Binding Book}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Booktitle" Width="*" Binding="{Binding Author}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Amount" Width="0.2*" Binding="{Binding Units}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Grid.ColumnDefinitions>
