@@ -9,11 +9,15 @@ using Labb2_EntityFramework;
 using Labb2_EntityFramework.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Labb2_EntityFramework.Commands;
+using System.Windows.Controls.Primitives;
 
 namespace Labb2_EntityFramework.ViewModel;
 
 internal class MainWindowViewModel : ViewModelBase
 {
+    public DelegateCommand AddBooksCommand { get; }
+    public DelegateCommand RemoveBooksCommand { get; }
     public ObservableCollection<Butiker> Stores { get; private set; }
     private Butiker _selectedStore;
     public Butiker SelectedStore
@@ -39,20 +43,65 @@ internal class MainWindowViewModel : ViewModelBase
         }
     }
     public ObservableCollection<inventorySummary> Inventories { get; private set; }
+    private string _unitsToChange;
+    public string UnitsToChange
+    {
+        get => _unitsToChange;
+        set
+        {
+            _unitsToChange = value;
+            RaisePropertyChanged(nameof(UnitsToChange));
+        }
+    }
 
     public MainWindowViewModel()
     {
         LoadStores();
         LoadBooks();
+        AddBooksCommand = new DelegateCommand(DoAddBooks, CanAddBooks);
+        RemoveBooksCommand = new DelegateCommand(DoRemoveBooks, CanRemoveBooks);
     }
-    public void AddBooks()
+    private bool CanAddBooks(object obj) => true;
+    private void DoAddBooks(object obj)
     {
+        using var db = new BokhandelContext();
 
+        if (Int32.TryParse(UnitsToChange, out int unitsParsed))
+        {
+            var lagersaldo = db.Lagersaldos.First(i => i.ButikId == 1);
+            lagersaldo.Antal += unitsParsed;
+            db.SaveChanges();
+            LoadInventory();
+            RaisePropertyChanged(nameof(Inventories));
+        }
+        else
+        {
+            //popup window
+        }  
     }
-    public void RemoveBooks()
+    private bool CanRemoveBooks(object obj) => true;
+    private void DoRemoveBooks(object obj)
     {
+        using var db = new BokhandelContext();
 
+        if (Int32.TryParse(UnitsToChange, out int unitsParsed))
+        {
+            var lagersaldo = db.Lagersaldos.FirstOrDefault(i => i.ButikId == SelectedStore.Id && i.Isbn == SelectedBook.Isbn13);
+            lagersaldo.Antal -= unitsParsed;
+            if (lagersaldo.Antal <= 0)
+            {
+                lagersaldo.Antal = 0;
+            }
+            db.SaveChanges();
+            LoadInventory();
+            RaisePropertyChanged(nameof(Inventories));
+        }
+        else
+        {
+            //popup window
+        }    
     }
+
     private void LoadBooks()
     {
         using var db = new BokhandelContext();
@@ -82,6 +131,7 @@ internal class MainWindowViewModel : ViewModelBase
             .Where(o => o.Butik == SelectedStore)
             .Select(o => new inventorySummary()
             {
+                Id = o.ButikId,
                 Book = o.IsbnNavigation.Titel,
                 Author = o.IsbnNavigation.Författare.Förnamn,
                 Units = o.Antal
@@ -93,6 +143,7 @@ internal class MainWindowViewModel : ViewModelBase
 
 public class inventorySummary
 {
+    public int Id { get; set; }
     public string Book { get; set; }
     public string Author { get; set; }
     public int Units { get; set; }

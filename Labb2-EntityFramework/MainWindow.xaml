@@ -42,7 +42,7 @@
                    VerticalAlignment="Top"
                    Width="100"
                    Height="50"/>
-            <ComboBox x:Name="bookComboBox"
+            <!--<ComboBox x:Name="bookComboBox"
                       Margin="10, -20, 0, 0"
                       HorizontalAlignment="Right"
                       VerticalAlignment="Top"
@@ -50,21 +50,23 @@
                       Height="20"
                       ItemsSource="{Binding Books}"
                       SelectedItem="{Binding SelectedBook}"
-                      DisplayMemberPath="Titel"/>
+                      DisplayMemberPath="Titel"/>-->
         </StackPanel>
         <StackPanel x:Name="editAmountStackPanel"
                     Grid.Row="1"
                     Grid.Column="2">
             <Label x:Name="editAmountLabel1"
                    Margin="0, 0, 10, 0"
-                   Content="Amount"
+                   Content="Units"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"/>
             <TextBox x:Name="editAmountTextBox"
                      Margin="0, 0, 10, 0"
                      HorizontalAlignment="Right"
                      Width="52"
-                     Height="20" RenderTransformOrigin="0.509,0.823"/>
+                     Height="20" 
+                     HorizontalContentAlignment="Right"
+                     Text="{Binding UnitsToChange}"/>
         </StackPanel>
         <WrapPanel x:Name="editAmountButtonsWrapPanel"
                    Grid.Row="1"
@@ -76,7 +78,7 @@
                     Width="50"
                     Height="50"
                     Content="Add"
-                    Command="{Binding AddBooks}"/>
+                    Command="{Binding AddBooksCommand}"/>
             <Button x:Name="removeAmountButton"
                     Margin="10, 10, 0, 0"
                     HorizontalAlignment="Center"
@@ -84,18 +86,19 @@
                     Width="50"
                     Height="50"
                     Content="Remove"
-                    Command="{Binding RemoveBooks}"/>
+                    Command="{Binding RemoveBooksCommand}"/>
         </WrapPanel>
         <DataGrid x:Name="myDataGrid"
                   Margin="10, 10, 10, 0"
                   Grid.ColumnSpan="4"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
-                  ItemsSource="{Binding Inventories}">
+                  ItemsSource="{Binding Inventories}"
+                  SelectedItem="{Binding SelectedBook}">
             <DataGrid.Columns>
-                <DataGridTextColumn IsReadOnly ="True" Header="Bookstore" Width="*" Binding="{Binding Book}"/>
-                <DataGridTextColumn IsReadOnly ="True" Header="Booktitle" Width="*" Binding="{Binding Author}"/>
-                <DataGridTextColumn IsReadOnly ="True" Header="Amount" Width="0.2*" Binding="{Binding Units}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Book" Width="*" Binding="{Binding Book}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Title" Width="*" Binding="{Binding Author}"/>
+                <DataGridTextColumn IsReadOnly ="True" Header="Units" Width="0.2*" Binding="{Binding Units}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Grid.ColumnDefinitions>
