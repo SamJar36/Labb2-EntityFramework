@@ -32,18 +32,20 @@ internal class MainWindowViewModel : ViewModelBase
             RaisePropertyChanged(nameof(Inventories));
         }
     }
-    public ObservableCollection<Böcker> Books { get; private set; }
-    private Böcker _selectedBook;
-    public Böcker SelectedBook
+    public ObservableCollection<InventorySummary> Inventories { get; private set; }
+    private InventorySummary _selectedBook;
+    public InventorySummary SelectedBook
     {
         get => _selectedBook;
         set
         {
             _selectedBook = value;
             RaisePropertyChanged(nameof(SelectedBook));
+            AddBooksCommand.RaiseCanExecuteChanged();
+            RemoveBooksCommand.RaiseCanExecuteChanged();
         }
     }
-    public ObservableCollection<inventorySummary> Inventories { get; private set; }
+
     private string _unitsToChange;
     public string UnitsToChange
     {
@@ -60,17 +62,20 @@ internal class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         LoadStores();
-        LoadBooks();
         AddBooksCommand = new DelegateCommand(DoAddBooks, CanAddBooks);
         RemoveBooksCommand = new DelegateCommand(DoRemoveBooks, CanRemoveBooks);
     }
-    private bool CanAddBooks(object? obj) => UnitsToChange != null && UnitsToChange.Length > 0 && UnitsToChange.All(char.IsDigit);
+    private bool CanAddBooks(object? obj) => 
+        UnitsToChange != null 
+        && UnitsToChange.Length > 0 
+        && UnitsToChange.All(char.IsDigit) 
+        && SelectedBook != null;
     private void DoAddBooks(object obj)
     {
         using var db = new BokhandelContext();
 
         int unitsParsed = Int32.Parse(UnitsToChange);
-        var lagersaldo = db.Lagersaldos.First(i => i.ButikId == 1);
+        var lagersaldo = db.Lagersaldos.First(i => i.ButikId == SelectedStore.Id && i.Isbn == SelectedBook.Isbn);
         lagersaldo.Antal += unitsParsed;
         if (lagersaldo.Antal >= 1000)
         {
@@ -80,14 +85,20 @@ internal class MainWindowViewModel : ViewModelBase
         db.SaveChanges();
         LoadInventory();
         RaisePropertyChanged(nameof(Inventories));
+        AddBooksCommand.RaiseCanExecuteChanged();
+        UnitsToChange = "";
     }
-    private bool CanRemoveBooks(object? obj) => UnitsToChange != null && UnitsToChange.Length > 0 && UnitsToChange.All(char.IsDigit);
+    private bool CanRemoveBooks(object? obj) => 
+        UnitsToChange != null 
+        && UnitsToChange.Length > 0 
+        && UnitsToChange.All(char.IsDigit)
+        && SelectedBook != null;
     private void DoRemoveBooks(object obj)
     {
         using var db = new BokhandelContext();
 
         int unitsParsed = Int32.Parse(UnitsToChange);
-        var lagersaldo = db.Lagersaldos.FirstOrDefault(i => i.ButikId == SelectedStore.Id && i.Isbn == SelectedBook.Isbn13);
+        var lagersaldo = db.Lagersaldos.FirstOrDefault(i => i.ButikId == SelectedStore.Id && i.Isbn == SelectedBook.Isbn);
         lagersaldo.Antal -= unitsParsed;
         if (lagersaldo.Antal <= 0)
         {
@@ -96,16 +107,8 @@ internal class MainWindowViewModel : ViewModelBase
         db.SaveChanges();
         LoadInventory();
         RaisePropertyChanged(nameof(Inventories));
-    }
-    private void LoadBooks()
-    {
-        using var db = new BokhandelContext();
-
-        Books = new ObservableCollection<Böcker>(
-            db.Böckers
-            .Distinct()
-            .ToList());
-        SelectedBook = Books.FirstOrDefault();
+        RemoveBooksCommand.RaiseCanExecuteChanged();
+        UnitsToChange = "";
     }
     private void LoadStores()
     {
@@ -121,25 +124,27 @@ internal class MainWindowViewModel : ViewModelBase
     {
         using var db = new BokhandelContext();
 
-        Inventories = new ObservableCollection<inventorySummary>(
+        Inventories = new ObservableCollection<InventorySummary>(
             db.Lagersaldos
             .Where(o => o.Butik == SelectedStore)
-            .Select(o => new inventorySummary()
+            .Select(o => new InventorySummary()
             {
                 Id = o.ButikId,
                 Book = o.IsbnNavigation.Titel,
-                Author = o.IsbnNavigation.Författare.Förnamn,
-                Units = o.Antal
+                Author = o.IsbnNavigation.Författare.Förnamn + " " + o.IsbnNavigation.Författare.Efternamn,
+                Units = o.Antal,
+                Isbn = o.IsbnNavigation.Isbn13
             }
             ).ToList()
         );
     }
 }
 
-public class inventorySummary
+public class InventorySummary
 {
     public int Id { get; set; }
     public string Book { get; set; }
     public string Author { get; set; }
     public int Units { get; set; }
+    public string Isbn { get; set; }
 }

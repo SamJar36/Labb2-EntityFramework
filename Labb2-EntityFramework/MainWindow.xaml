@@ -94,6 +94,10 @@
                   Grid.ColumnSpan="4"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeColumns="False"
+                  SelectionMode="Single"
+                  
                   ItemsSource="{Binding Inventories}"
                   SelectedItem="{Binding SelectedBook}">
             <DataGrid.Columns>
