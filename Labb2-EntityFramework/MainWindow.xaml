@@ -10,14 +10,20 @@
         Title="Bookstore" Height="500" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.3*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.4*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <StackPanel x:Name="storeStackPanel"
                     Grid.Row="1">
             <Label x:Name="storeLabel"
-                   Margin="10, 0, 0, 0"
-                   Content="Store"
+                   Margin="10, 10, 0, 0"
+                   Content="Select store"
+                   FontWeight="Bold"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Width="100"
@@ -32,47 +38,29 @@
                       SelectedItem="{Binding SelectedStore}"
                       DisplayMemberPath="Butiksnamn"/>
         </StackPanel>
-        <StackPanel x:Name="bookStackPanel"
-                    Grid.Row="1"
-                    Grid.Column="1">
-            <Label x:Name="bookLabel"
-                   Margin="10, 0, 0, 0"
-                   Content="Book"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Top"
-                   Width="100"
-                   Height="50"/>
-            <ComboBox x:Name="bookComboBox"
-                      Margin="10, -20, 0, 0"
-                      HorizontalAlignment="Right"
-                      VerticalAlignment="Top"
-                      Width="150"
-                      Height="20"
-                      ItemsSource="{Binding Books}"
-                      SelectedItem="{Binding SelectedBook}"
-                      DisplayMemberPath="Titel"/>
-        </StackPanel>
-        <StackPanel x:Name="editAmountStackPanel"
-                    Grid.Row="1"
-                    Grid.Column="2">
+        <StackPanel Grid.Row="2"
+                    Grid.ColumnSpan="2">
+            <Label Margin="10, 0, 0, 0"
+                   HorizontalAlignment="Left"
+                   FontWeight="Bold"
+                   Content="Add or Remove Books from store"/>
             <Label x:Name="editAmountLabel1"
-                   Margin="0, 0, 10, 0"
+                   Margin="10, 0, 10, 0"
                    Content="Units"
-                   HorizontalAlignment="Right"
+                   HorizontalAlignment="Left"
                    VerticalAlignment="Top"/>
             <TextBox x:Name="editAmountTextBox"
-                     Margin="0, 0, 10, 0"
-                     HorizontalAlignment="Right"
+                     Margin="10, 0, 0, 0"
+                     HorizontalAlignment="Left"
                      Width="52"
                      Height="20" 
                      HorizontalContentAlignment="Right"
                      Text="{Binding UnitsToChange, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <WrapPanel x:Name="editAmountButtonsWrapPanel"
-                   Grid.Row="1"
-                   Grid.Column="3">
+                   Grid.Row="2">
             <Button x:Name="addAmountButton"
-                    Margin="10, 10, 0, 0"
+                    Margin="10, 80, 0, 0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Width="50"
@@ -80,7 +68,7 @@
                     Content="Add"
                     Command="{Binding AddBooksCommand}"/>
             <Button x:Name="removeAmountButton"
-                    Margin="10, 10, 0, 0"
+                    Margin="10, 80, 0, 0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Width="50"
@@ -89,28 +77,29 @@
                     IsEnabled="True"
                     Command="{Binding RemoveBooksCommand}"/>
         </WrapPanel>
+        <Label Grid.Column="1"
+               HorizontalAlignment="Center"
+               FontSize="18"
+               FontWeight="Bold"
+               Content="{Binding SelectedStore.Butiksnamn}"/>
         <DataGrid x:Name="myDataGrid"
-                  Margin="10, 10, 10, 0"
-                  Grid.ColumnSpan="4"
+                  Margin="10,10,10,10"
+                  Grid.Column="1"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="3"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserReorderColumns="False"
                   CanUserResizeColumns="False"
                   SelectionMode="Single"
-                  
                   ItemsSource="{Binding Inventories}"
-                  SelectedItem="{Binding SelectedBook}">
+                  SelectedItem="{Binding SelectedBook}" Grid.RowSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly ="True" Header="Book" Width="*" Binding="{Binding Book}"/>
                 <DataGridTextColumn IsReadOnly ="True" Header="Title" Width="*" Binding="{Binding Author}"/>
                 <DataGridTextColumn IsReadOnly ="True" Header="Units" Width="0.2*" Binding="{Binding Units}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+
     </Grid>
 </Window>
