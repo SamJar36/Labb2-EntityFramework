@@ -42,7 +42,7 @@
                    VerticalAlignment="Top"
                    Width="100"
                    Height="50"/>
-            <!--<ComboBox x:Name="bookComboBox"
+            <ComboBox x:Name="bookComboBox"
                       Margin="10, -20, 0, 0"
                       HorizontalAlignment="Right"
                       VerticalAlignment="Top"
@@ -50,7 +50,7 @@
                       Height="20"
                       ItemsSource="{Binding Books}"
                       SelectedItem="{Binding SelectedBook}"
-                      DisplayMemberPath="Titel"/>-->
+                      DisplayMemberPath="Titel"/>
         </StackPanel>
         <StackPanel x:Name="editAmountStackPanel"
                     Grid.Row="1"
@@ -66,7 +66,7 @@
                      Width="52"
                      Height="20" 
                      HorizontalContentAlignment="Right"
-                     Text="{Binding UnitsToChange}"/>
+                     Text="{Binding UnitsToChange, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <WrapPanel x:Name="editAmountButtonsWrapPanel"
                    Grid.Row="1"
@@ -86,6 +86,7 @@
                     Width="50"
                     Height="50"
                     Content="Remove"
+                    IsEnabled="True"
                     Command="{Binding RemoveBooksCommand}"/>
         </WrapPanel>
         <DataGrid x:Name="myDataGrid"

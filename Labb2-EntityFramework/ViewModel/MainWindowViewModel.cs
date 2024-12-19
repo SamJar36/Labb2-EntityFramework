@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Labb2_EntityFramework.Commands;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Animation;
 
 namespace Labb2_EntityFramework.ViewModel;
 
@@ -50,8 +51,10 @@ internal class MainWindowViewModel : ViewModelBase
         set
         {
             _unitsToChange = value;
+            RemoveBooksCommand.RaiseCanExecuteChanged();
+            AddBooksCommand.RaiseCanExecuteChanged();
             RaisePropertyChanged(nameof(UnitsToChange));
-        }
+         }
     }
 
     public MainWindowViewModel()
@@ -61,47 +64,39 @@ internal class MainWindowViewModel : ViewModelBase
         AddBooksCommand = new DelegateCommand(DoAddBooks, CanAddBooks);
         RemoveBooksCommand = new DelegateCommand(DoRemoveBooks, CanRemoveBooks);
     }
-    private bool CanAddBooks(object obj) => true;
+    private bool CanAddBooks(object? obj) => UnitsToChange != null && UnitsToChange.Length > 0 && UnitsToChange.All(char.IsDigit);
     private void DoAddBooks(object obj)
     {
         using var db = new BokhandelContext();
 
-        if (Int32.TryParse(UnitsToChange, out int unitsParsed))
+        int unitsParsed = Int32.Parse(UnitsToChange);
+        var lagersaldo = db.Lagersaldos.First(i => i.ButikId == 1);
+        lagersaldo.Antal += unitsParsed;
+        if (lagersaldo.Antal >= 1000)
         {
-            var lagersaldo = db.Lagersaldos.First(i => i.ButikId == 1);
-            lagersaldo.Antal += unitsParsed;
-            db.SaveChanges();
-            LoadInventory();
-            RaisePropertyChanged(nameof(Inventories));
+            lagersaldo.Antal = 1000;
+            // popup, max 1000
         }
-        else
-        {
-            //popup window
-        }  
+        db.SaveChanges();
+        LoadInventory();
+        RaisePropertyChanged(nameof(Inventories));
     }
-    private bool CanRemoveBooks(object obj) => true;
+    private bool CanRemoveBooks(object? obj) => UnitsToChange != null && UnitsToChange.Length > 0 && UnitsToChange.All(char.IsDigit);
     private void DoRemoveBooks(object obj)
     {
         using var db = new BokhandelContext();
 
-        if (Int32.TryParse(UnitsToChange, out int unitsParsed))
+        int unitsParsed = Int32.Parse(UnitsToChange);
+        var lagersaldo = db.Lagersaldos.FirstOrDefault(i => i.ButikId == SelectedStore.Id && i.Isbn == SelectedBook.Isbn13);
+        lagersaldo.Antal -= unitsParsed;
+        if (lagersaldo.Antal <= 0)
         {
-            var lagersaldo = db.Lagersaldos.FirstOrDefault(i => i.ButikId == SelectedStore.Id && i.Isbn == SelectedBook.Isbn13);
-            lagersaldo.Antal -= unitsParsed;
-            if (lagersaldo.Antal <= 0)
-            {
-                lagersaldo.Antal = 0;
-            }
-            db.SaveChanges();
-            LoadInventory();
-            RaisePropertyChanged(nameof(Inventories));
+            lagersaldo.Antal = 0;
         }
-        else
-        {
-            //popup window
-        }    
+        db.SaveChanges();
+        LoadInventory();
+        RaisePropertyChanged(nameof(Inventories));
     }
-
     private void LoadBooks()
     {
         using var db = new BokhandelContext();
