@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Labb2_EntityFramework.Commands;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
+using Labb2_EntityFramework.Dialogs;
+using System.Windows;
 
 namespace Labb2_EntityFramework.ViewModel;
 
@@ -77,16 +79,16 @@ internal class MainWindowViewModel : ViewModelBase
         int unitsParsed = Int32.Parse(UnitsToChange);
         var lagersaldo = db.Lagersaldos.First(i => i.ButikId == SelectedStore.Id && i.Isbn == SelectedBook.Isbn);
         lagersaldo.Antal += unitsParsed;
-        if (lagersaldo.Antal >= 1000)
+        if (lagersaldo.Antal >= 100)
         {
-            lagersaldo.Antal = 1000;
-            // popup, max 1000
+            lagersaldo.Antal = 100;
+            InvalidUnitDialog popup = new InvalidUnitDialog();
+            popup.ShowDialog();
         }
         db.SaveChanges();
         LoadInventory();
         RaisePropertyChanged(nameof(Inventories));
         AddBooksCommand.RaiseCanExecuteChanged();
-        UnitsToChange = "";
     }
     private bool CanRemoveBooks(object? obj) => 
         UnitsToChange != null 
@@ -108,7 +110,6 @@ internal class MainWindowViewModel : ViewModelBase
         LoadInventory();
         RaisePropertyChanged(nameof(Inventories));
         RemoveBooksCommand.RaiseCanExecuteChanged();
-        UnitsToChange = "";
     }
     private void LoadStores()
     {

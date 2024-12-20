@@ -82,7 +82,7 @@
                     Command="{Binding RemoveBooksCommand}"/>
         </WrapPanel>
         <Image Source="Assets/bokhandel.png"
-               Margin="5,0,0,10"
+               Margin="3,0,0,10"
                Grid.Row="3"/>
         <Label Grid.Column="1"
                HorizontalAlignment="Center"

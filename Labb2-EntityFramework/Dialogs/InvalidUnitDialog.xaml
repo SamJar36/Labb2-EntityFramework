@@ -1,0 +1,20 @@
+﻿<Window x:Class="Labb2_EntityFramework.Dialogs.InvalidUnitDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Labb2_EntityFramework.Dialogs"
+        mc:Ignorable="d"
+        Title="Error" Height="170" Width="250">
+    <Grid>
+        <TextBlock Text="Please note that the maximum allowable quantity units for each book is 100. Adjustments beyond this limit are not permitted."
+                   Margin="10, 10, 10, 10"
+                   TextWrapping="Wrap"/>
+        <Button HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Content="OK"
+                Margin="0, 50, 0, 20"
+                Width="70"
+                Click="Button_Click"/>
+    </Grid>
+</Window>
